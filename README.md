@@ -5,7 +5,10 @@ SQLite database. The source also includes tools for discovering and inspecting
 candidate source databases and importing selected callsigns.
 
 The current source version is 0.1. This source repository does not include a
-downloadable application package or a callsign database.
+downloadable application package or a populated callsign database.
+
+Read the [online user guide](https://battlehook.github.io/Call-Checker/) or
+continue with the source setup below.
 
 ## Features
 
@@ -101,11 +104,20 @@ anything. Binary release packaging and release acceptance are separate work.
 
 ## Support
 
-When the public GitHub repository is available, use its Issues page for
+Use the repository's Issues page for
 reproducible bugs or feature requests. Include the Windows/Python version and
 minimal synthetic reproduction details. Review reports and paths for private
 information; do not attach personal databases. The repository includes
 separate bug-report and feature-request forms.
+
+## Optional support
+
+Call Checker is free to use. If it is useful to you, you can optionally
+support its development with a one-time donation on
+[Ko-fi](https://ko-fi.com/battlehook). You choose the amount; donations are
+not required and do not unlock features.
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/U7W728RRWG)
 
 ## License
 

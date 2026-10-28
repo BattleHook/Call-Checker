@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="User guide for Call Checker, a Windows callsign lookup and selected-source import tool.">
+  <title>Call Checker — User Guide</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, sans-serif; line-height: 1.6; }
+    body { max-width: 58rem; margin: 0 auto; padding: 1.5rem; }
+    a { color: #1769aa; }
+    @media (prefers-color-scheme: dark) { a { color: #8fc7ff; } }
+    header { border-bottom: 1px solid #8888; margin-bottom: 2rem; padding-bottom: 1rem; }
+    nav ul { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; padding-left: 1.2rem; }
+    section { margin-block: 2rem; }
+    .note { border-left: .3rem solid #b7791f; padding: .5rem 1rem; }
+    code { overflow-wrap: anywhere; }
+    img { max-width: 100%; }
+  </style>
+</head>
+<body>
+  <header>
+    <p><a href="https://github.com/BattleHook/Call-Checker">BattleHook / Call-Checker</a></p>
+    <h1>Call Checker</h1>
+    <p>A Windows desktop tool for finding callsigns in a local SQLite database,
+      inspecting candidate source databases, and importing callsigns you select.</p>
+    <p>This site documents the source project. No downloadable application
+      package is currently provided.</p>
+  </header>
+
+  <nav aria-label="Guide contents">
+    <ul>
+      <li><a href="#lookup">Lookup</a></li>
+      <li><a href="#setup">Run from source</a></li>
+      <li><a href="#sources">Scan and import</a></li>
+      <li><a href="#data">Database and data</a></li>
+      <li><a href="#support">Support</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section id="lookup">
+      <h2>Callsign lookup</h2>
+      <p>Call Checker searches a local table named <code>callsigns</code> with a
+        <code>callsign</code> text column. It conservatively matches portable
+        callsigns while retaining the full entered call for copying. Verify
+        results against an authoritative source; this tool is not a substitute
+        for official callsign information.</p>
+    </section>
+
+    <section id="setup">
+      <h2>Run from source</h2>
+      <p>Use 64-bit Windows with Python 3.14 and Tkinter. Clone or download the
+        <a href="https://github.com/BattleHook/Call-Checker">source repository</a>,
+        then run these commands from its root in PowerShell:</p>
+      <pre><code>py -3.14 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r Build\requirements.txt
+.\.venv\Scripts\python.exe .\CALL_Checker.py</code></pre>
+      <p>The export includes a minimal starter database containing only the
+        author's seed callsign, <code>PA1RGX</code>. To add other callsigns,
+        configure source files deliberately and use the application's import
+        feature.</p>
+      <p>See the repository's
+        <a href="https://github.com/BattleHook/Call-Checker/blob/main/README.md">README</a>
+        for complete setup, build and test instructions.</p>
+    </section>
+
+    <section id="sources">
+      <h2>Scan and import sources</h2>
+      <p>Scanning lists candidate file paths under roots you configure; it does
+        not read database contents. Inspect source schemas read-only, select
+        source tables explicitly, and review the choices before importing.
+        Imports append selected callsigns to the target database, committing
+        each completed source separately. Keep a separate backup before an
+        import.</p>
+      <p>Read the
+        <a href="https://github.com/BattleHook/Call-Checker/blob/main/Tools/CALL_Checker_Sources_help.txt">source and import help</a>
+        before scanning or importing. Access <code>.mdb</code> support has
+        additional Windows provider requirements.</p>
+    </section>
+
+    <section id="data">
+      <h2>Data, privacy and limitations</h2>
+      <ul>
+        <li>No populated operator database or bulk callsign list is included.
+          The published starter contains only <code>PA1RGX</code>.</li>
+        <li>Only scan roots and source files you intend to use. Review paths
+          and source data before importing.</li>
+        <li>Source datasets may have separate licensing or redistribution
+          terms. Review those terms before using or sharing a dataset.</li>
+        <li>The scan-root restriction is an application guard, not an
+          operating-system security boundary.</li>
+      </ul>
+      <p class="note">The application is Windows-only and its graphical
+        interface uses Tkinter. Access database support depends on compatible
+        installed 32-bit components.</p>
+    </section>
+
+    <section id="support">
+      <h2>Support and optional donation</h2>
+      <p>Report reproducible bugs or feature requests through
+        <a href="https://github.com/BattleHook/Call-Checker/issues">GitHub Issues</a>.
+        Do not attach personal databases or private station information.</p>
+      <p>Call Checker is free to use. If it is useful to you, you can optionally
+        support development with a one-time donation on
+        <a href="https://ko-fi.com/battlehook">Ko-fi</a>. You choose the amount;
+        donations are not required and do not unlock features.</p>
+      <p><a href="https://ko-fi.com/U7W728RRWG">
+        <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support Call Checker on Ko-fi (optional)">
+      </a></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Developed by BattleHook (PA1RGX). Original source and documentation are
+      released under the <a href="https://github.com/BattleHook/Call-Checker/blob/main/LICENSE">MIT License</a>.
+      See the repository's
+      <a href="https://github.com/BattleHook/Call-Checker/blob/main/THIRD-PARTY-NOTICES.md">third-party notices</a>.</p>
+  </footer>
+</body>
+</html>

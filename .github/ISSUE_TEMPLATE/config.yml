@@ -1,1 +1,5 @@
 blank_issues_enabled: false
+contact_links:
+  - name: Call Checker user guide
+    url: https://battlehook.github.io/Call-Checker/
+    about: Read setup, lookup, source import, and safe-use guidance.
