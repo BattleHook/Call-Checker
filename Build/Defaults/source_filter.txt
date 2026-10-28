@@ -1,0 +1,9 @@
+# Case-insensitive exclusions for new scan additions only.
+*DXCC*
+*POTA*
+*SOTA*
+*subdivision*
+*copy*
+*kopie*
+*abandon*
+*historical*

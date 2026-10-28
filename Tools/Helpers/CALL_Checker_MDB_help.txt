@@ -1,0 +1,22 @@
+CALL_CHECKER_MDB - Legacy read-only SpotCollector lookup
+
+Without arguments: show this help; no database is opened.
+This helper is used by the archived MDB-enabled checker, not the active GUI.
+With required arguments: search Spots.Callsign and return callsign/spot_count
+JSON, ordered by SpotCount. Substring matches first; if fewer than five,
+include alternatives sharing the first two typed characters.
+
+Run with 32-bit Windows PowerShell:
+  C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe -NoProfile -File
+    CALL_Checker_MDB.ps1 -DatabasePath "C:\folder\Spots.mdb" -SearchText PA1
+(Enter the example above on one command line.)
+
+OPTIONS
+  /H, /?, -H, -Help      Show help; no database access.
+  -DatabasePath FILE     Existing SpotCollector MDB with Spots table.
+  -SearchText TEXT       Required for lookup; at least three letters/digits
+                        or ? / * characters. This is not a wildcard engine:
+                        the query uses substring and two-character prefix.
+
+Uses installed Jet 4.0, Mode=Read. No database writes or automatic installs.
+Output is JSON on stdout; failures are stderr with exit code 1.

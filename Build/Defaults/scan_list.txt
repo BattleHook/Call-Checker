@@ -1,0 +1,2 @@
+# Add explicitly permitted scan roots here, one directory per line.
+# Empty by default: scans fail closed until configured.

@@ -1,0 +1,233 @@
+CALL CHECKER SOURCES
+===================
+QUICK OPTIONS (no flags: list configured paths only, no database access)
+  /H /h /? -h --help   Show command help.
+  --scan FOLDER        Scan an allowed root/subfolder using the scan filter.
+  --scan-listed        Scan all directories in the allowed-root list.
+  --scan-list FILE     Override scan_list.txt (default beside tool).
+  --update-list        With --scan, append eligible new paths to source list.
+  --scan-result        With --scan, replace scan_result.txt.
+  --filter FILE        Override scan filter.
+  --source FILE        Inventory/inspect this file instead; repeatable.
+  --inspect            Read table/column names only.
+  --list FILE          Override source list.
+  --import             Import from list and append import_result.txt.
+  --target FILE        Existing import target; exclude it from scan additions.
+
+GUI: Sources > Scan sources scans all scan_list.txt roots, adds new paths to the
+source list, then replaces Tools\scan_result.txt. NEW marks paths added in that
+scan; EXISTING marks already listed paths; the target is excluded from additions.
+Scan and import results appear in a separate HSC-styled report popup owned by
+the checker, never in the callsign suggestions panel. Full text is retained,
+without INFO-message truncation. Vertical scrollbar on the right; horizontal
+scrollbar below for long unwrapped paths. FILTERED is bold in scan reports.
+Import output has a blank line before each next source database block.
+Failures also show full output in this report popup. The popup is reused for
+the latest report; text can be selected/copied. Close or Escape dismisses it.
+Its valid on-screen X/Y position is saved beside the checker in
+report_window_position.json. Minimized coordinates are never saved; invalid
+saved positions trigger a warning and use a visible default position.
+Plain-text report files and callsign suggestions remain unchanged.
+During import the status bar shows the source database number/total and full
+path before that database is read, then the target path during writing and
+integrity verification. Progress is streamed while the GUI remains responsive;
+it is not a percentage or a record-by-record progress indication.
+When appending new source paths, trailing empty lines are removed before the
+new entries; internal blank lines, comments and selections are preserved.
+Review the list before Sources > Import callsigns, which asks for confirmation.
+Actions run in the background; another action/normal window close is blocked
+until completion. Dialogs belong to the checker. A successful import refreshes
+current suggestions. No app restart is performed automatically.
+
+Run these commands from the CALLCHECK folder:
+
+  python Tools\CALL_Checker_Sources.py
+    List configured paths without opening databases.
+
+  python Tools\CALL_Checker_Sources.py --inspect
+    Inspect table/column names only, with sources opened read-only.
+
+  python Tools\CALL_Checker_Sources.py --scan C:\MyCallsignData
+    Discover database filenames only. Do not change the list.
+
+  python Tools\CALL_Checker_Sources.py --scan C:\MyCallsignData --update-list
+    Append previously unlisted paths to source_list.txt. Does not import.
+    Existing entries/comments/selections remain. Target DB is excluded.
+    Review additions: scans may include abandoned logs and dated copies.
+
+  python Tools\CALL_Checker_Sources.py --scan C:\MyCallsignData --update-list --scan-result
+    Same scan/list update, then replace scan_result.txt beside the source list.
+    Report includes timestamp, all paths, NEW/EXISTING/TARGET markers and totals.
+    Previous scan report is replaced, not appended. No database records are read.
+    If report writing fails after the list update, the error states the list
+    has already been updated. List update and report write are not atomic together.
+
+  python Tools\CALL_Checker_Sources.py --scan-listed --update-list --scan-result
+    GUI equivalent: scan every allowed root, update list, replace scan report.
+
+ALLOWED SCAN LOCATIONS
+----------------------
+scan_list.txt beside the tool defines directories where scanning is allowed.
+Published defaults are empty. Configure reviewed roots before scanning.
+One directory per line, recursively including subfolders.
+Blank lines and # comments allowed; relative roots resolve beside the list.
+No wildcards. Duplicate/nested roots are scanned only once.
+--scan-listed scans all roots. --scan FOLDER restricts scanning to one listed
+root or its subfolder. Resolved paths outside allowed roots are rejected,
+including escaped link paths encountered during traversal; no list/report update.
+Missing/unreadable/empty lists and nonexistent roots are explicit errors, never
+a fallback to a disk root. --scan-list FILE selects an alternate allowed-root
+list. This is an application scan guard, not an OS security sandbox.
+Scan report names the allowed-root list and each root actually scanned.
+Allowed roots govern discovery, not import: --import still uses source_list.txt.
+
+SCAN FILTER
+-----------
+All scans load source_filter.txt beside the tool; --filter FILE overrides it.
+Missing/unreadable/invalid filter files stop the scan before list/report writes.
+Blank lines and # comments are ignored. Rules are case-insensitive:
+  *DXCC*             Exclude all filenames containing DXCC (also GridDXCC).
+  *kopie*            Exclude copies; * matches any text, ? one character.
+  *copy*             Exclude English copy filenames.
+  *abandon*          Exclude Abandoned and Abandonned spellings.
+  C:\folder\*.mdb    Match the full path; bare rules match filenames only.
+Other characters, including square brackets, match literally.
+Rules ending in "(only newest not filtered)" keep one file per pattern:
+  C:\MyCallsignData\Awards *.mdb (only newest not filtered)
+Prefer LotW.mdb (canonical filename without date/version). If absent, keep
+the highest numeric date/version in the filename, comparing digit groups as
+numbers from left to right (e.g. 10 > 9; YYYY-MM-DD and YYYYMMDD work within
+a consistently named series). Modification timestamps are not used.
+Newest patterns require one trailing * before the extension. Ordinary
+exclusions always win, even against newest rules. Equal versions use a
+case-insensitive full-path ordering for deterministic selection.
+Filtered paths stay visible in scan_result.txt with the exclusion reason,
+but are never newly appended to source_list.txt. Existing source-list lines
+are NOT removed and --import still uses that list as-is; review it manually.
+No database contents are inspected to determine whether a source is useful.
+
+  python Tools\CALL_Checker_Sources.py --import
+    Read only the listed sources; import missing calls into CALL_CHECKER.DB.
+    Does not scan for extra files or modify source databases.
+
+IMPORT RESULT
+-------------
+Each completed --import appends a block to import_result.txt beside the
+source list (normally Tools\import_result.txt). Previous blocks are retained.
+Each block starts with import date/time including time zone, followed by each
+database path, its unique valid calls, new calls added and invalid values skipped.
+Overlapping new calls count only for the first source in list order; per-source
+new counts therefore sum to the total added. Source totals are unique normalized
+valid calls, not raw rows; do not sum them to get an overall unique total.
+Totals at the end give databases read, new calls added, target path and total
+unique stored callsigns in the target after import (COUNT DISTINCT callsign).
+Skipped databases appear with a reason, plus separate inspected/skipped totals.
+Total databases read counts only sources whose callsign values were read.
+If all sources are skipped, the existing target is opened read-only for its
+total, with Status: NO CHANGES (all sources skipped), not a claimed commit.
+Each source has COMMITTED, SKIPPED, FAILED or NOT PROCESSED status.
+Each completed source is committed and saved before the next is read.
+A real error stops the run, rolling back only the current source; earlier
+commits stay saved. A PARTIAL block (earlier sources committed) or FAILED block
+(none committed) is appended, including the failure and untouched later sources.
+The reported target total is from the last verified transaction/preflight.
+No individual callsigns are written. If report appending fails, an explicit
+error/nonzero exit states that any completed transactions remain saved.
+An interrupted/killed process may have saved completed sources without a final
+report; rerunning is safe because already present calls are not inserted again.
+
+SOURCE LIST
+-----------
+Default: source_list.txt beside this tool, independent of working directory.
+One database path per line. Blank lines and lines starting with # are ignored.
+Relative database paths are relative to the list file, for example:
+
+  ..\Data\Source.db
+  C:\MyCallsignData\LoggingExport.mdb|QSOs|Call
+
+CALL and CALLSIGN column names are recognized case-insensitively.
+If more than one candidate exists, select explicitly: path|table|column.
+No CALL/CALLSIGN columns: visibly SKIPPED, then continue to the next database.
+Ambiguous columns or invalid explicit selections remain errors, not guessing.
+Some reference datasets do not contain callsigns and will be reported as
+skipped. Configure source_filter.txt for files you have reviewed. If a source
+contains multiple candidate tables or columns, select the intended one
+explicitly rather than relying on an assumed schema.
+--list FILE overrides the list; --source FILE overrides paths for inspection.
+
+IMPORT RULES / SAFETY
+--------------------
+Trim surrounding whitespace and uppercase values. Non-slash calls retain the
+basic 3+ ASCII letter/digit check, requiring at least one letter and digit.
+Slash calls import only one unambiguous base call, using callsign_rules.py:
+  PA/DL1DL/P, DL1DL/M, DL1DL/PA, DL1DL/7 -> DL1DL
+  F/2E0ABC/P -> 2E0ABC; PA/3DA0ABC/P -> 3DA0ABC
+The base must contain a letter before a digit and end in letters. Other parts
+must look like a short country prefix (1-3 letters or up to four alphanumeric
+characters ending in a digit), P/M/MM/AM/QRP/QRPP, or a single area digit.
+At most one prefix part may precede the base. This is a syntax heuristic,
+not a country-prefix registry or proof of a valid/assigned callsign.
+Multiple base candidates, empty slash parts or unrecognized modifiers are
+skipped, with a separate ambiguous/unsupported slash count (included in the
+invalid total). No guessing which of two calls is the base.
+Existing slash rows are never deleted/rewritten and do not prevent adding the
+base as a separate row. The target total remains all stored distinct calls,
+including legacy slash rows; it is not a count of deduplicated base identities.
+Down/Up underline a suggestion, scroll it into view and preview it in input.
+GUI question mark wildcard: ? matches exactly one ASCII letter or digit.
+PA?F?Q can match PA1FAQ or PA3FBQ; DL1?? matches exactly two final characters.
+Patterns match the entire base, not substrings; no fuzzy fallback is applied.
+Portable PA/DL1?BC/P preserves PA/ and /P. Wildcards are only allowed in
+one identifiable base segment, not in portable modifiers. Resolved unknown
+characters are green; choose with arrows and Enter. No automatic ghost
+replacement of question marks. Import never accepts question marks.
+The original suggestion list stays unchanged while browsing; no clipboard
+change occurs until Enter. Up from the first row deselects and restores the
+original input/cursor; Escape does the same. Prefix/suffix remain intact.
+Provisional input copies the selected row's red/green character markings
+onto the base only; country prefix/suffix keep their normal appearance.
+Callsign text uses bundled Cascadia Mono to distinguish dotted zero from O.
+Fonts are loaded privately for this process, without system installation.
+Keep the Fonts folder and its SIL OFL license with the checker.
+This is display-only: database/input/clipboard retain ordinary ASCII 0 and O.
+Enter accepts/copies the selected call, preserving country prefix/suffix.
+Typing or refreshed suggestions clears selection; report popups are separate.
+Without selection, Enter retains the existing ghost-completion/copy behavior.
+GUI searches/ranks by the extracted base but preserves the entire input,
+country prefix and suffix for Enter/clipboard. Ghost extends the base even
+before a suffix: PA/DL1D/P previews PA/DL1DL/P, with added L green and /P
+normal. Actual input is unchanged until Enter accepts/copies the completion.
+The automatic completion is the first full alphabetical prefix match, not
+the shortest completion or a common partial prefix. DL1 can suggest DL100ANA
+before DL1A. It is visible/accepted with the cursor at the end of the base
+(before /P) or at the end of the full input, not inside either segment.
+GUI also searches unfinished bases ending in a digit: PA/DO1 searches DO1
+and can complete to PA/DO1ABC or PA/DO1ABC/P when /P is present.
+Import still requires a complete base ending in letters.
+Ambiguous slash input or input without an identifiable base has a visible
+message and no guessed search.
+Invalid/null/non-text values are skipped with counts; duplicates are merged.
+Existing target calls are compared after normalization but never rewritten.
+Sources open read-only (SQLite mode=ro; 32-bit Access provider Mode=Read).
+The existing target is validated read-only before sources are read.
+Each supported source is read completely, then saved in its own transaction
+with metadata.callsigns refreshed to the actual distinct stored count.
+The metadata table is created if absent. Count and calls commit/roll back
+together, including zero-addition reruns; skipped sources remain read-only.
+with integrity verification. Only that source rolls back on failure; earlier
+source commits remain. No target write lock is held while reading sources.
+Schema-only skipped sources are reported, not treated as read failures.
+Target must already exist, with callsigns(callsign PRIMARY KEY) as its only
+callsigns-table column. Other tables are not changed. No automatic backups.
+--target FILE overrides the target (normally CALL_CHECKER.DB beside the GUI).
+Target may not also be a source. Only --import writes the target database.
+Any source/schema/helper failure is reported with a nonzero exit code.
+Counts, not callsign records, are printed. Large MDB imports may take time.
+
+MDB/ACCDB uses Tools\Helpers\CALL_Checker_SourceSchema.ps1 via installed 32-bit
+PowerShell/Jet (MDB) or ACE (ACCDB). No Python Access package is required.
+Missing providers/errors are reported; the tool does not install anything.
+
+OFFLINE TESTS (from CALLCHECK root)
+------------------------------------
+  python -B -m unittest discover -s Tests -p "test_call_checker*.py" -v

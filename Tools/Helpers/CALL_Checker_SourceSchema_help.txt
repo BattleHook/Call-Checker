@@ -1,0 +1,20 @@
+CALL_CHECKER_SOURCESCHEMA - Read-only Access metadata/calls bridge
+
+Without arguments: show this help; no database is opened.
+With -DatabasePath only: return JSON table and column names, not records.
+Run database operations with 32-bit Windows PowerShell:
+  C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe -NoProfile -File
+    CALL_Checker_SourceSchema.ps1 -DatabasePath "C:\folder\source.mdb"
+(Enter the example above on one command line.)
+
+OPTIONS
+  /H, /?, -H, -Help      Show help; no database access.
+  -DatabasePath FILE     Existing MDB (Jet 4.0) or ACCDB (ACE 12.0).
+  -ReadCalls            Return distinct values as a JSON array, not schema.
+  -Table NAME           Required with -ReadCalls; selected table.
+  -Column NAME          Required with -ReadCalls; CALL or CALLSIGN only,
+                        case-insensitive. Other columns are refused.
+
+Sources open Mode=Read. No writes, automatic installs or backups.
+Normal JSON output goes to stdout; errors to stderr, exit code 1.
+Provider availability is required; ACCDB support depends on installed ACE.

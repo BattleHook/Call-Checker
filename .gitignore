@@ -1,0 +1,28 @@
+# Local databases and source data
+SOURCES/
+*.db
+*.DB
+*.mdb
+*.MDB
+*.accdb
+*.ACCDB
+*.sqlite
+*.sqlite3
+# The reviewed publication tree tracks its zero-row starter database.
+!CALL_CHECKER.DB
+
+# Operator-specific source selections and generated reports
+Tools/source_list.txt
+Tools/scan_list.txt
+Tools/source_filter.txt
+Tools/import_result.txt
+Tools/scan_result.txt
+report_window_position.json
+
+# Build output and Python caches
+dist/
+dist-metadata/
+build-work/
+__pycache__/
+*.py[cod]
+.venv/

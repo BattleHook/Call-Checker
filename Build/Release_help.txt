@@ -1,0 +1,25 @@
+CALLCHECK v0.1 - Windows x64
+==========================
+Keep the complete release folder together. Start CALL_Checker_v0.1.exe.
+Python is bundled; a separate Python installation is not required.
+
+No callsign database or station configuration is shipped.
+Place your existing CALL_CHECKER.DB beside the EXE before searching/importing.
+The database must contain only callsigns(callsign TEXT PRIMARY KEY).
+Do not move a database while it is being used. Keep your own backup.
+
+Configure Tools\source_list.txt, scan_list.txt and source_filter.txt deliberately.
+Scan roots are empty by default and fail closed until configured.
+Sources menu operations use the bundled CALL_Checker_Sources.exe.
+Its command help: CALL_Checker_Sources.exe /H
+Full option/import safety description: Tools\CALL_Checker_Sources_help.txt.
+Sources remain read-only. Import updates the existing target per source;
+earlier committed sources remain saved if a later source fails.
+Access requires a compatible installed 32-bit provider and Windows PowerShell.
+ACCDB/ACE compatibility has not been validated.
+
+Fonts contains unmodified Cascadia Mono and its required SIL OFL license.
+Fonts are loaded only into this process, not installed in Windows.
+Reports/configuration and report_window_position.json need a writable folder.
+No administrator permission is needed. Review paths and database selections
+before use; this tool does not make a backup of the target database.

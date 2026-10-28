@@ -1,0 +1,58 @@
+CALLCHECK TOOLS - Quick command reference
+
+CALL_Checker_Sources.py without flags lists source_list.txt paths only.
+It does not inspect databases or import by default.
+
+  python CALL_Checker_Sources.py /H
+
+OPTIONS
+  /H /h /? -h --help     Show command help; exit 0, no database access.
+  --scan FOLDER         Scan an allowed root/subfolder; filenames only.
+  --scan-listed         Scan all roots in scan_list.txt (GUI default).
+  --scan-list FILE      Override allowed-root list (default beside this tool).
+  --update-list         With either scan mode: append eligible new source paths.
+  --scan-result         With either scan mode: replace scan_result.txt.
+  --filter FILE         Override scan filter (default beside this tool).
+  --source FILE         Override sources for inventory/inspection; repeatable.
+  --inspect             Read-only schema inspection; never imports.
+  --list FILE           Override source list; relative sources resolve beside it.
+  --import              Import only listed sources, append import_result.txt.
+  --target FILE         Existing target for import; excluded from scan additions.
+
+Do not combine --import with scan/update/inspect/source actions.
+scan_list.txt defines allowed scan roots, one directory per line, recursively.
+Published defaults are empty; configure roots deliberately before scanning.
+Relative roots resolve beside the list. # comments/blank lines are allowed;
+no wildcards. Empty/missing/invalid lists are errors.
+Explicit --scan outside those roots is refused, including resolved path escapes.
+The allowed-root list is a scan guard, not an operating-system security sandbox.
+source_filter.txt excludes filenames; source_list.txt selects import sources.
+Scans do not open databases. Import sources are read-only; target additions
+are committed separately after each completed source, with no backup.
+On a later real error: stop, roll back that source only, retain earlier commits,
+and append a PARTIAL/FAILED report (exit 1). Re-running deduplicates saved calls.
+No CALL/CALLSIGN column: report SKIPPED
+and continue. Ambiguous/explicitly invalid selections or read/write failures
+remain errors; these are not silently ignored. All-skipped import leaves the
+target unchanged. Review discoveries and explicit table selections first.
+Slash calls import only the unambiguous base: PA/DL1DL/P -> DL1DL.
+Ambiguous/unsupported slash forms are counted and skipped. Existing slash
+rows are preserved; a later import can add the base alongside them.
+The checker searches the base but Enter copies the full portable call.
+callsign_rules.py is the shared parsing library, not a command-line helper;
+no flags or database operations. Full rules are in CALL_Checker_Sources_help.txt.
+
+Examples (no real import is performed by reading this file):
+  python CALL_Checker_Sources.py --scan-listed --update-list --scan-result
+  python CALL_Checker_Sources.py --inspect
+  python CALL_Checker_Sources.py --import
+
+Full behavior: CALL_Checker_Sources_help.txt in this directory.
+Imports refresh metadata.callsigns in the same transaction as each source.
+Explicit maintenance (not automatic import): sanitize_descriptions.py TARGET.DB
+replaces examples/metadata only, verifying unchanged callsigns. See its local
+sanitize_descriptions_help.txt; obtain authorization before maintenance.
+Access helper options: each *_help.txt beside its script in Helpers.
+Exit 0 = completed (may include explicit SKIPPED sources); 1 = failed;
+2 = invalid command line. SystemExit: 1 in a debugger is the exit status,
+not the underlying cause: read the preceding ERROR line.

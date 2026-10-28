@@ -1,0 +1,16 @@
+CALLCHECK ACCESS HELPERS
+
+Run either helper without arguments, with /H, /?, -H or -Help to show help.
+Help never opens a database. Database operations require 32-bit PowerShell.
+
+CALL_Checker_SourceSchema.ps1
+  -DatabasePath FILE: list Access table/column names as JSON.
+  -ReadCalls -Table NAME -Column NAME: read distinct CALL/CALLSIGN values.
+  Full reference: CALL_Checker_SourceSchema_help.txt.
+
+CALL_Checker_MDB.ps1
+  -DatabasePath FILE -SearchText TEXT: legacy SpotCollector callsign lookup.
+  Used by the archived MDB checker, not the active checker.
+  Full reference: CALL_Checker_MDB_help.txt.
+
+Sources are read-only. Errors go to stderr with exit code 1.

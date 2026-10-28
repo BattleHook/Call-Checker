@@ -1,0 +1,10 @@
+SANITIZE DESCRIPTIONS - explicit database maintenance
+===================================================
+No arguments: show usage and exit 2; no database access.
+/H /? -h --help: show usage and exit 0.
+TARGET.DB: replace examples and metadata with callsign-only descriptions.
+Preserves original generated timestamp with an explicit historical label.
+Verifies callsign count/content hash, integrity and example SQL compilation
+inside one transaction; failure rolls back. No callsigns are edited.
+This is not an import action; obtain explicit authorization before use.
+Does not clear provenance, license or redistribution obligations.

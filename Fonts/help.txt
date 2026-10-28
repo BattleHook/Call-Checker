@@ -1,0 +1,16 @@
+CALLCHECK - BUNDLED FONT
+=======================
+Cascadia Mono 2407.24, unmodified static TrueType fonts.
+Copyright Microsoft Corporation; SIL Open Font License 1.1.
+See LICENSE.txt for the complete copyright notice and license.
+
+Source:
+https://github.com/microsoft/cascadia-code/releases/tag/v2407.24
+Archive: CascadiaCode-2407.24.zip
+Files: ttf/static/CascadiaMono-{Regular,Bold,Italic,BoldItalic}.ttf
+
+The checker loads these fonts privately into its Windows process.
+No system font installation or administrator permission is needed.
+Keep all four TTF files and LICENSE.txt when distributing the checker.
+The zero is dotted; ASCII callsign data and clipboard remain unchanged.
+These are assets, not a command-line helper; no flags apply.
